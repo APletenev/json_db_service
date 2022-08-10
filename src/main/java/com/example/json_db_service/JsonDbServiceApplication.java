@@ -1,5 +1,6 @@
 package com.example.json_db_service;
 
+import com.example.json_db_service.model.OperationType;
 import com.example.json_db_service.model.output.ErrorOutput;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -30,15 +31,35 @@ public class JsonDbServiceApplication implements CommandLineRunner {
         }
     }
 
+    public static OperationType stringToOperationType(String s) throws Exception {
+        try {
+            return Enum.valueOf(OperationType.class, s);
+        } catch (IllegalArgumentException e) {
+            throw new Exception("Неправильный тип операции: " + s
+                    + ". Допустимые значения: " + OperationType.search + ", " + OperationType.stat);
+        }
+    }
+
+
     @Override
     public void run(String[] args) throws IOException {
 
-        String outputFile = "error.json";
-
+        String outputFile = "error.json"; //Используется для вывода ошибки, если не удается создать заданный выходной файл
         try {
-            if (args.length != 3) throw new Exception("Неправильное количество параметров."
+            if (args.length != 3) throw new Exception("Неправильное количество параметров. "
                     + "Входные параметры: тип операции, путь к входному файлу, путь к файлу результата");
-            if (outputFilenameValid(args[2])) outputFile = args[2];
+            if (outputFilenameValid(args[2])) // В первую очередь валидируем путь к файлу результата. т.к. ошибки тоже пишутся в него
+                outputFile = args[2];
+
+            switch (stringToOperationType(args[0])) {
+                case search:
+
+                    break;
+                case stat:
+
+                    break;
+            }
+
 
         } catch (Exception e) {
             ObjectMapper objectMapper = new ObjectMapper();
