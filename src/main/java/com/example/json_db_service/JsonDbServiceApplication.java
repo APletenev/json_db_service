@@ -1,6 +1,7 @@
 package com.example.json_db_service;
 
 import com.example.json_db_service.model.OperationType;
+import com.example.json_db_service.model.input.SearchInput;
 import com.example.json_db_service.model.output.ErrorOutput;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -51,15 +52,17 @@ public class JsonDbServiceApplication implements CommandLineRunner {
             if (outputFilenameValid(args[2])) // В первую очередь валидируем путь к файлу результата. т.к. ошибки тоже пишутся в него
                 outputFile = args[2];
 
+            ObjectMapper objectMapper = new ObjectMapper();
             switch (stringToOperationType(args[0])) {
                 case search:
-
+                    SearchInput searchInput = objectMapper.readValue(new File(args[1]), SearchInput.class);
+                    System.out.println(searchInput);
                     break;
                 case stat:
 
                     break;
             }
-
+            System.out.println("Загружен запрос из файла " + args[1]);
 
         } catch (Exception e) {
             ObjectMapper objectMapper = new ObjectMapper();
