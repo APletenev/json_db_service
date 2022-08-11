@@ -2,6 +2,7 @@ package com.example.json_db_service;
 
 import com.example.json_db_service.model.OperationType;
 import com.example.json_db_service.model.input.SearchInput;
+import com.example.json_db_service.model.input.StatInput;
 import com.example.json_db_service.model.output.ErrorOutput;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -59,7 +60,8 @@ public class JsonDbServiceApplication implements CommandLineRunner {
                     System.out.println(searchInput);
                     break;
                 case stat:
-
+                    StatInput statInput = objectMapper.readValue(new File(args[1]), StatInput.class);
+                    System.out.println(statInput);
                     break;
             }
             System.out.println("Загружен запрос из файла " + args[1]);
