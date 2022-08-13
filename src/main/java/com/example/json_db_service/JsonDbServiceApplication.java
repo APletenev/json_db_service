@@ -4,6 +4,7 @@ import com.example.json_db_service.model.OperationType;
 import com.example.json_db_service.model.input.SearchInput;
 import com.example.json_db_service.model.input.StatInput;
 import com.example.json_db_service.model.output.ErrorOutput;
+import com.example.json_db_service.model.output.SearchOutput;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import org.springframework.boot.CommandLineRunner;
@@ -20,6 +21,7 @@ public class JsonDbServiceApplication implements CommandLineRunner {
         SpringApplication.run(JsonDbServiceApplication.class, args);
     }
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     public static boolean outputFilenameValid(String filename) throws IOException {
         File file = new File(filename);
         boolean created = false;
@@ -43,10 +45,11 @@ public class JsonDbServiceApplication implements CommandLineRunner {
     }
 
 
+
     @Override
     public void run(String[] args) throws IOException {
 
-        String outputFile = "error.json"; //Используется для вывода ошибки, если не удается создать заданный выходной файл
+        String outputFile = "output.json"; //Используется для вывода, если не удается создать заданный выходной файл
         try {
             if (args.length != 3) throw new Exception("Неправильное количество параметров. "
                     + "Входные параметры: тип операции, путь к входному файлу, путь к файлу результата");
@@ -54,10 +57,15 @@ public class JsonDbServiceApplication implements CommandLineRunner {
                 outputFile = args[2];
 
             ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.configure(SerializationFeature.INDENT_OUTPUT, true);
             switch (stringToOperationType(args[0])) {
                 case search:
                     SearchInput searchInput = objectMapper.readValue(new File(args[1]), SearchInput.class);
                     System.out.println(searchInput);
+
+                    SearchOutput searchOutput = searchInput.generateOutput();
+
+                    objectMapper.writeValue(new File(outputFile), searchOutput);
                     break;
                 case stat:
                     StatInput statInput = objectMapper.readValue(new File(args[1]), StatInput.class);
@@ -67,6 +75,7 @@ public class JsonDbServiceApplication implements CommandLineRunner {
             System.out.println("Загружен запрос из файла " + args[1]);
 
         } catch (Exception e) {
+//            e.printStackTrace();
             ObjectMapper objectMapper = new ObjectMapper();
             objectMapper.configure(SerializationFeature.INDENT_OUTPUT, true);
             objectMapper.writeValue(new File(outputFile), new ErrorOutput(e.getMessage()));

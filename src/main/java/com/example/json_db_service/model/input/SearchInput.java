@@ -1,29 +1,24 @@
 package com.example.json_db_service.model.input;
 
-import com.example.json_db_service.model.criteria.BadCustomersCriteria;
-import com.example.json_db_service.model.criteria.ExpensesCriteria;
-import com.example.json_db_service.model.criteria.LastNameCriteria;
-import com.example.json_db_service.model.criteria.ProductNameCriteria;
+import com.example.json_db_service.model.criteria.Criteria;
+import com.example.json_db_service.model.output.SearchOutput;
+import com.example.json_db_service.model.output.SearchResult;
 import lombok.Data;
 
 import java.util.ArrayList;
-import java.util.List;
 
 @Data
 public class SearchInput {
 
-    private List<Object> criterias;
+    private ArrayList<Criteria> criterias;
 
-    public SearchInput() {
-        if (criterias == null) {
-            criterias = new ArrayList<>();
-            criterias.add(new ArrayList<LastNameCriteria>());
-            criterias.add(new ArrayList<ProductNameCriteria>());
-            criterias.add(new ArrayList<ExpensesCriteria>());
-            criterias.add(new ArrayList<BadCustomersCriteria>());
+    public SearchOutput generateOutput() {
+        SearchOutput searchOutput = new SearchOutput();
 
-
+        for (Criteria criteria : criterias ) {
+            searchOutput.addResult(new SearchResult(criteria));
         }
+        return searchOutput;
     }
 
 }
