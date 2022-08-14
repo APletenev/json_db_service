@@ -15,10 +15,9 @@ public class Criteria extends LinkedHashMap<String, Object> {
         CustomerService customerService = ApplicationContextHolder.getContext().getBean(CustomerService.class);
         switch (keyset) {
             case "[lastName]":
-                result = customerService.findAllByLastName((String)get("lastName"));
-                break;
+                return customerService.findAllByLastName((String)get("lastName"));
             case "[productName, minTimes]":
-                break;
+                return customerService.CustomersPurchasedProductNotLessThan((String)get("productName"), (int)get("minTimes") );
             case "[minExpenses, maxExpenses]":
                 break;
             case "[badCustomers]":
