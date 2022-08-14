@@ -12,7 +12,7 @@ public class SearchInput {
 
     private ArrayList<Criteria> criterias;
 
-    public SearchOutput generateOutput() {
+    public SearchOutput generateOutput() throws Exception {
         SearchOutput searchOutput = new SearchOutput();
 
         for (Criteria criteria : criterias ) {

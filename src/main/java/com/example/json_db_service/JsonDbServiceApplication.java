@@ -73,9 +73,10 @@ public class JsonDbServiceApplication implements CommandLineRunner {
                     break;
             }
             System.out.println("Загружен запрос из файла " + args[1]);
+            System.out.println("Сохранен результат в файл " + outputFile);
 
         } catch (Exception e) {
-//            e.printStackTrace();
+            e.printStackTrace();
             ObjectMapper objectMapper = new ObjectMapper();
             objectMapper.configure(SerializationFeature.INDENT_OUTPUT, true);
             objectMapper.writeValue(new File(outputFile), new ErrorOutput(e.getMessage()));

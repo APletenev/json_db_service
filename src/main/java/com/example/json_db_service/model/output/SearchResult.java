@@ -11,9 +11,9 @@ public class SearchResult {
     private Criteria criteria;
     private List<Customer> results;
 
-    public SearchResult(Criteria criteria) {
+    public SearchResult(Criteria criteria) throws Exception {
         this.criteria = criteria;
-        this.results = criteria.getResults();
+        results = this.criteria.getResults();
     }
 
 }
