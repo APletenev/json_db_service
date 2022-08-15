@@ -33,6 +33,8 @@ public class StatOutput extends Output {
     @JsonIgnore
     private Date endDate;
 
+    private long totalExpenses;  // Сумма покупок всех покупателей за период
+
     public StatOutput() {
         type = search;
     }
@@ -72,14 +74,17 @@ public class StatOutput extends Output {
 
     @JsonProperty
     private List<StatResult> customers() {
+        long sumOfTotalExpenses = 0;
+        List<StatResult> statResults = customerService.statResults(startDate, endDate);
 
-        return customerService.statResults(startDate, endDate);
+        for (StatResult sr : statResults) {
+            sumOfTotalExpenses+=sr.getTotalExpenses();
+        }
+        setTotalExpenses(sumOfTotalExpenses);
+        return statResults;
     }
 
-    @JsonProperty
-    private long totalExpenses() { // Сумма покупок всех покупателей за период
-        return 0;
-    }
+
 
     @JsonProperty
     private long avgExpenses() { // Средние затраты всех покупателей за период
