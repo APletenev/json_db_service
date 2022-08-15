@@ -1,0 +1,9 @@
+{
+	"criterias": [ 
+	    {"lastName": "Иванов"},
+	    {"lastName": "Петров"},
+ 	    {"productName": "БАНАНЫ", "minTimes": 2},
+	    {"minExpenses": 20, "maxExpenses": 30},
+	    {"badCustomers": 3}
+      ]
+}
