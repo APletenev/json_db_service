@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-import static com.example.json_db_service.model.OperationType.search;
+import static com.example.json_db_service.model.OperationType.stat;
 
 @Data
 @Component
@@ -38,7 +38,7 @@ public class StatOutput extends Output {
     private float avgExpenses;  // Средние затраты всех покупателей за период
 
     public StatOutput() {
-        type = search;
+        type = stat;
     }
 
     @JsonProperty
@@ -87,10 +87,6 @@ public class StatOutput extends Output {
 
         return statResults;
     }
-
-
-
-
 
 
 }
