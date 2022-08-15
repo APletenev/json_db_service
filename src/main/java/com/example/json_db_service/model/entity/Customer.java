@@ -8,7 +8,9 @@ import lombok.Setter;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
-import java.util.Set;
+import java.util.Date;
+import java.util.List;
+
 
 @Entity
 @Table(name = "customer")
@@ -28,27 +30,34 @@ public class Customer implements Json {
 
     @OneToMany(mappedBy = "customer", fetch = FetchType.EAGER)
     @JsonIgnore
-    private Set<Purchase> purchases;
+    private List<Purchase> purchases;
 
-    public Customer(Set<Purchase> purchases) {
+    public Customer(List<Purchase> purchases) {
         this.purchases = purchases;
 
     }
 
     @JsonIgnore
     @Transactional
-    public long getSumOfPurchases () {
+    public long getSumOfPurchases() {
         long sum = 0;
         for (Purchase p : purchases) {
-            sum+=p.getProduct().getPrice();
+            sum += p.getProduct().getPrice();
         }
         return sum;
     }
 
     @JsonIgnore
     @Transactional
-    public long getCountOfPurchases () {
+    public long getCountOfPurchases() {
         return purchases.size();
+    }
+
+
+    @JsonIgnore
+    @Transactional
+    public void removePurchasesOutOfDates(Date startDate, Date endDate) {
+        purchases.removeIf((Purchase p) -> p.getPurchaseDate().before(startDate) || p.getPurchaseDate().after(endDate));
     }
 
 }

@@ -10,20 +10,19 @@ import java.util.List;
 public class Criteria extends LinkedHashMap<String, Object> {
 
     public List<Customer> getResults() throws Exception {
-        List<Customer> result = null;
         String keyset = keySet().toString();
         CustomerService customerService = ApplicationContextHolder.getContext().getBean(CustomerService.class);
         switch (keyset) {
             case "[lastName]":
                 return customerService.findAllByLastName((String) get("lastName"));
             case "[productName, minTimes]":
-                return customerService.CustomersPurchasedProductNotLessThan((String) get("productName"), (int) get("minTimes"));
+                return customerService.customersPurchasedProductNotLessThan((String) get("productName"), (int) get("minTimes"));
             case "[minExpenses, maxExpenses]":
-                return customerService.CustomersWithTotalBetween(
+                return customerService.customersWithTotalBetween(
                         ((Number) get("minExpenses")).longValue() * 100L,
                         ((Number) get("maxExpenses")).longValue() * 100L);
             case "[badCustomers]":
-                return customerService.BadCustomers((int)get("badCustomers"));
+                return customerService.badCustomers((int)get("badCustomers"));
             default:
                 throw new Exception("Неправильные параметры запроса: " + keyset);
         }
