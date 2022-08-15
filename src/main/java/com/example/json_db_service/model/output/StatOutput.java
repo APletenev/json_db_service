@@ -35,6 +35,8 @@ public class StatOutput extends Output {
 
     private long totalExpenses;  // Сумма покупок всех покупателей за период
 
+    private float avgExpenses;  // Средние затраты всех покупателей за период
+
     public StatOutput() {
         type = search;
     }
@@ -81,14 +83,14 @@ public class StatOutput extends Output {
             sumOfTotalExpenses+=sr.getTotalExpenses();
         }
         setTotalExpenses(sumOfTotalExpenses);
+        setAvgExpenses((float) Math.round((float)sumOfTotalExpenses/statResults.size() * 100) / 100);
+
         return statResults;
     }
 
 
 
-    @JsonProperty
-    private long avgExpenses() { // Средние затраты всех покупателей за период
-        return 0;
-    }
+
+
 
 }

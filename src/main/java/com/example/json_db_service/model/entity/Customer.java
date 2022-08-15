@@ -44,7 +44,7 @@ public class Customer implements Json {
         for (Purchase p : purchases) {
             sum += p.getProduct().getPrice();
         }
-        return sum;
+        return sum/100; // Переводим из копеек в рубли
     }
 
     @JsonIgnore
