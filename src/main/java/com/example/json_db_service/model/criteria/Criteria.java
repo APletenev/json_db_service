@@ -23,12 +23,10 @@ public class Criteria extends LinkedHashMap<String, Object> {
                         ((Number) get("minExpenses")).longValue() * 100L,
                         ((Number) get("maxExpenses")).longValue() * 100L);
             case "[badCustomers]":
-                break;
+                return customerService.BadCustomers((int)get("badCustomers"));
             default:
                 throw new Exception("Неправильные параметры запроса: " + keyset);
         }
-
-        return result;
 
     }
 }

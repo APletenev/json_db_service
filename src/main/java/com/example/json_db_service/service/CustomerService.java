@@ -35,4 +35,14 @@ public class CustomerService {
         return customers;
     }
 
+    public List<Customer> BadCustomers(int badCustomers) throws Exception {
+        List<Customer> customers = customerRepository.findAll();
+        if (badCustomers > customers.size()) {
+            throw new Exception("Заданное число пассивных покупателей: " + badCustomers
+                    + " больше чем общее число покупателей: " + customers.size());
+        }
+        customers.sort((c1, c2) -> (int) (c1.getCountOfPurchases() - c2.getCountOfPurchases()));
+        return customers.subList(0, badCustomers);
+    }
+
 }

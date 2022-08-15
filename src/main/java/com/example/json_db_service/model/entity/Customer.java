@@ -45,5 +45,10 @@ public class Customer implements Json {
         return sum;
     }
 
+    @JsonIgnore
+    @Transactional
+    public long getCountOfPurchases () {
+        return purchases.size();
+    }
 
 }
