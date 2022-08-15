@@ -23,5 +23,6 @@ public class Purchase {
     @JoinColumn(name = "product_id")
     private Product product;
 
+    @Column (name = "date")
     private Date purchaseDate;
 }

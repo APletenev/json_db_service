@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -25,7 +26,7 @@ public class Customer implements Json {
     @Column(name = "first_name")
     private String firstName;
 
-    @OneToMany(mappedBy = "customer")
+    @OneToMany(mappedBy = "customer", fetch = FetchType.EAGER)
     @JsonIgnore
     private Set<Purchase> purchases;
 
@@ -33,4 +34,16 @@ public class Customer implements Json {
         this.purchases = purchases;
 
     }
+
+    @JsonIgnore
+    @Transactional
+    public long getSumOfPurchases () {
+        long sum = 0;
+        for (Purchase p : purchases) {
+            sum+=p.getProduct().getPrice();
+        }
+        return sum;
+    }
+
+
 }
