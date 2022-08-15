@@ -5,8 +5,10 @@ import com.example.json_db_service.model.input.SearchInput;
 import com.example.json_db_service.model.input.StatInput;
 import com.example.json_db_service.model.output.ErrorOutput;
 import com.example.json_db_service.model.output.SearchOutput;
+import com.example.json_db_service.model.output.StatOutput;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -17,6 +19,8 @@ import java.io.IOException;
 @SpringBootApplication
 public class JsonDbServiceApplication implements CommandLineRunner {
 
+    @Autowired
+    StatOutput statOutput;
     public static void main(String[] args) {
         SpringApplication.run(JsonDbServiceApplication.class, args);
     }
@@ -45,11 +49,11 @@ public class JsonDbServiceApplication implements CommandLineRunner {
     }
 
 
-
     @Override
     public void run(String[] args) throws IOException {
 
         String outputFile = "output.json"; //Используется для вывода, если не удается создать заданный выходной файл
+
         try {
             if (args.length != 3) throw new Exception("Неправильное количество параметров. "
                     + "Входные параметры: тип операции, путь к входному файлу, путь к файлу результата");
@@ -61,15 +65,14 @@ public class JsonDbServiceApplication implements CommandLineRunner {
             switch (stringToOperationType(args[0])) {
                 case search:
                     SearchInput searchInput = objectMapper.readValue(new File(args[1]), SearchInput.class);
-                    System.out.println(searchInput);
-
                     SearchOutput searchOutput = searchInput.generateOutput();
-
                     objectMapper.writeValue(new File(outputFile), searchOutput);
                     break;
                 case stat:
                     StatInput statInput = objectMapper.readValue(new File(args[1]), StatInput.class);
                     System.out.println(statInput);
+                    statOutput.setDates(statInput);
+                    objectMapper.writeValue(new File(outputFile), statOutput);
                     break;
             }
             System.out.println("Загружен запрос из файла " + args[1]);
