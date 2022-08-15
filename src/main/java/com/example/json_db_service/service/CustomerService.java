@@ -1,17 +1,19 @@
 package com.example.json_db_service.service;
 
 import com.example.json_db_service.model.entity.Customer;
+import com.example.json_db_service.model.entity.Product;
+import com.example.json_db_service.model.entity.Purchase;
+import com.example.json_db_service.model.output.StatProductExpenses;
 import com.example.json_db_service.model.output.StatResult;
 import com.example.json_db_service.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.groupingBy;
 
 @Service
 public class CustomerService {
@@ -48,13 +50,25 @@ public class CustomerService {
         return customers.subList(0, badCustomers);
     }
 
-    public List<StatResult> statResults (Date startDate, Date endDate) {
-        List<Customer> customers = customerRepository.findCustomersByPurchasesPurchaseDateBetween(startDate, endDate);
+    public List<StatResult> statResults(Date startDate, Date endDate) {
+        List<Customer> customers = customerRepository.findDistinctCustomersByPurchasesPurchaseDateBetween(startDate, endDate);
+        List<StatProductExpenses> statProductExpenses = null;
         List<StatResult> result = new ArrayList<>();
-        for (Customer c :customers) {
+
+        for (Customer c : customers) {
             c.removePurchasesOutOfDates(startDate, endDate);
-            result.add(new StatResult(c.getLastName()+" "+c.getFirstName(),null,c.getSumOfPurchases()));
+            Map<Product, List<Purchase>> purchasesByProduct = c.getPurchases().stream()
+                    .collect(groupingBy(Purchase::getProduct));
+            statProductExpenses = new ArrayList<>();
+
+            for (Product p : purchasesByProduct.keySet()) {
+                statProductExpenses.add(new StatProductExpenses(p.getProductName(),
+                        (long) purchasesByProduct.get(p).size() * Math.round((p.getPrice() / 100F))));
+            }
+
+            result.add(new StatResult(c.getLastName() + " " + c.getFirstName(), statProductExpenses, c.getSumOfPurchases()));
         }
+        result.sort((r1, r2) -> (int) (r2.getTotalExpenses() - r1.getTotalExpenses()));
         return result;
     }
 

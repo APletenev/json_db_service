@@ -12,7 +12,7 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
     List<Customer> findCustomersByPurchasesProductProductName
             (String productName);
 
-    List<Customer> findCustomersByPurchasesPurchaseDateBetween(Date startDate, Date endDate);
+    List<Customer> findDistinctCustomersByPurchasesPurchaseDateBetween(Date startDate, Date endDate);
 
 
 }

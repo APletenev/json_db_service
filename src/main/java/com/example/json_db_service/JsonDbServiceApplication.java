@@ -70,7 +70,6 @@ public class JsonDbServiceApplication implements CommandLineRunner {
                     break;
                 case stat:
                     StatInput statInput = objectMapper.readValue(new File(args[1]), StatInput.class);
-                    System.out.println(statInput);
                     statOutput.setDates(statInput);
                     objectMapper.writeValue(new File(outputFile), statOutput);
                     break;
@@ -79,7 +78,6 @@ public class JsonDbServiceApplication implements CommandLineRunner {
             System.out.println("Сохранен результат в файл " + outputFile);
 
         } catch (Exception e) {
-            e.printStackTrace();
             ObjectMapper objectMapper = new ObjectMapper();
             objectMapper.configure(SerializationFeature.INDENT_OUTPUT, true);
             objectMapper.writeValue(new File(outputFile), new ErrorOutput(e.getMessage()));
