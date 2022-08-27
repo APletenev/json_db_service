@@ -5,11 +5,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
-import java.util.Date;
 import java.util.List;
+
 
 
 @Entity
@@ -28,36 +27,14 @@ public class Customer implements Json {
     @Column(name = "first_name")
     private String firstName;
 
-    @OneToMany(mappedBy = "customer", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "customer")
     @JsonIgnore
     private List<Purchase> purchases;
+
 
     public Customer(List<Purchase> purchases) {
         this.purchases = purchases;
 
-    }
-
-    @JsonIgnore
-    @Transactional
-    public long getSumOfPurchases() {
-        long sum = 0;
-        for (Purchase p : purchases) {
-            sum += p.getProduct().getPrice();
-        }
-        return Math.round(sum/100F); // Переводим из копеек в рубли
-    }
-
-    @JsonIgnore
-    @Transactional
-    public long getCountOfPurchases() {
-        return purchases.size();
-    }
-
-
-    @JsonIgnore
-    @Transactional
-    public void removePurchasesOutOfDates(Date startDate, Date endDate) {
-        purchases.removeIf((Purchase p) -> p.getPurchaseDate().before(startDate) || p.getPurchaseDate().after(endDate));
     }
 
 }

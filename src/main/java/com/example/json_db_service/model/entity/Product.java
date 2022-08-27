@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Table(name = "product")
@@ -24,5 +24,5 @@ public class Product {
     private long price;
 
     @OneToMany(mappedBy = "product")
-    private Set<Purchase> purchases;
+    private List<Purchase> purchases;
 }
