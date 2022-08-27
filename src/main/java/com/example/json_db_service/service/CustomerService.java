@@ -49,7 +49,6 @@ public class CustomerService {
             throw new Exception("Заданное число пассивных покупателей: " + badCustomers
                     + " больше чем общее число покупателей: " + customers.size());
         }
-//        customers.sort((c1, c2) -> (int) (c1.getCountOfPurchases() - c2.getCountOfPurchases()));
         customers.sort((c1, c2) -> (int) (customerRepository.countPurchasesByCustomer(c1) - customerRepository.countPurchasesByCustomer(c2)));
         return customers.subList(0, badCustomers);
     }
