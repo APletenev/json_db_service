@@ -18,7 +18,9 @@ import java.util.stream.Collectors;
 @Service
 public class CustomerService {
 
-
+    public static boolean between(long i, long minValueInclusive, long maxValueInclusive) {
+        return (i >= minValueInclusive && i <= maxValueInclusive);
+    }
     @Autowired
     private CustomerRepository customerRepository;
 
@@ -40,7 +42,7 @@ public class CustomerService {
 
     public List<Customer> customersWithTotalBetween(long minExpenses, long maxExpenses) {
         List<Customer> customers = customerRepository.findAll();
-        customers.removeIf((Customer c) -> SumOfPurchases(c) < minExpenses || SumOfPurchases(c) > maxExpenses);
+        customers.removeIf((Customer c) -> ! between (SumOfPurchases(c), minExpenses, maxExpenses));
         return customers;
     }
 
