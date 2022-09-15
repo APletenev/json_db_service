@@ -9,6 +9,6 @@ public class StatProductExpenses {
 
     public StatProductExpenses(String name, long expenses) {
         this.name = name;
-        this.expenses = expenses;
+        this.expenses = Math.round(expenses/100F); //Переводим из копеек в рубли
     }
 }

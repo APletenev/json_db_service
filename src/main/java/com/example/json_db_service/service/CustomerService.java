@@ -1,7 +1,6 @@
 package com.example.json_db_service.service;
 
 import com.example.json_db_service.model.entity.Customer;
-import com.example.json_db_service.model.entity.Product;
 import com.example.json_db_service.model.entity.Purchase;
 import com.example.json_db_service.model.output.StatProductExpenses;
 import com.example.json_db_service.model.output.StatResult;
@@ -10,10 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 import java.util.stream.Collectors;
-
-import static java.util.stream.Collectors.groupingBy;
 
 @Service
 public class CustomerService {
@@ -65,18 +65,8 @@ public class CustomerService {
         List<StatResult> result = new ArrayList<>();
 
         for (Customer c : customers) {
-            removePurchasesOutOfDates(c.getPurchases(), startDate, endDate);
-            Map<Product, List<Purchase>> purchasesByProduct = c.getPurchases().stream()
-                    .collect(groupingBy(Purchase::getProduct));
-            statProductExpenses = new ArrayList<>();
-
-            long totalExpenses=0;
-            for (Product p : purchasesByProduct.keySet()) {
-                long expenses=(long) purchasesByProduct.get(p).size() * Math.round((p.getPrice() / 100F));
-                statProductExpenses.add(new StatProductExpenses(p.getProductName(),expenses));
-                totalExpenses+=expenses;
-            }
-
+            statProductExpenses = customerRepository.GetStatProductExpenses(c, startDate, endDate);
+            long totalExpenses = statProductExpenses.stream().mapToLong(StatProductExpenses::getExpenses).reduce(Long::sum).orElse(0);
             result.add(new StatResult(c.getLastName() + " " + c.getFirstName(), statProductExpenses, totalExpenses));
         }
         result.sort((r1, r2) -> (int) (r2.getTotalExpenses() - r1.getTotalExpenses()));
