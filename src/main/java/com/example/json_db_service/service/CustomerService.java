@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 @Service
 public class CustomerService {
 
+
     @Autowired
     private CustomerRepository customerRepository;
 
@@ -34,7 +35,7 @@ public class CustomerService {
     }
 
     long SumOfPurchases(Customer customer) {
-        return Math.round(customerRepository.sumOfPurchases(customer) / 100F); // Переводим из копеек в рубли
+        return customerRepository.sumOfPurchases(customer) ;
     }
 
     public List<Customer> customersWithTotalBetween(long minExpenses, long maxExpenses) {
